@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% block content %}
+<ul class="nav justify-content-center" >
+    <li class="nav-item" style="margin-right:auto">
+    <span class="nav-link bg-secondary" onclick="sidebar(this)" id="toggleBtn" >More</span>
+  </li>
+</ul>
+<div class="row">
+    <div class="col-12 col-md-4 bg-secondary nav-pills text-light border border-light" id="sidebar">
+       <h4 class="text-light">Home</h4>
+        <li class="nav-item" style="margin-right:auto;">
+    <span class="nav-link active mobileDiv" id="TodoNav" onclick="changeDiv(this,'AddNewNav', 1)" >TODO</span>
+  </li>
+  <li class="nav-item" style="margin-right:auto;">
+    <span class="nav-link mobileDiv" id="AddNewNav" onclick="changeDiv(this,'TodoNav',2)" >Add New</span>
+  </li>
+        <a class="btn btn-secondary" href="/logout/">Logout</a>
+   </div>
+   <div class="col-12 col-md-6 bg-dark text-light border border-light" id="TodoDiv">
+       <center class="moblieDiv"><h4>TODO LIST</h4></center>
+      {% include "todo.html" %}
+   </div>
+
+   <div class="col-12 col-md-6 bg-dark text-light border border-light" id="AddNewDiv">
+       <center class="moblieDiv"><h4>Add New Item</h4></center>
+      {% include "AddNew.html" %}
+   </div>
+</div>
+<script>
+    function sidebar(ele){
+        if(ele.innerHTML=='More'){
+            document.getElementById('sidebar').style.display = 'block';
+            ele.innerHTML='Close'
+        }
+        else{
+            document.getElementById('sidebar').style.display = 'None';
+            ele.innerHTML='More'
+        }
+    }
+    function changeDiv(element, oppEle, page){
+        element.classList.add('active')
+        var toggleBtn = document.getElementById('toggleBtn')
+        sidebar(toggleBtn)
+        var oppElement = document.getElementById(oppEle)
+        oppElement.classList.remove('active')
+        if(page==1){
+            document.getElementById('TodoDiv').style.display='block';
+            document.getElementById('AddNewDiv').style.display='none';
+        }
+        else if(page==2){
+            document.getElementById('AddNewDiv').style.display='block';
+            document.getElementById('TodoDiv').style.display='none';
+        }
+
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,108 @@
+	<ul id = 'TODO'>
+		{% for ele in todolst %}
+		{% if ele.fields.marked == False %}
+		<span>
+      <dt>
+		  <input type="checkbox" topicid="{{ele.pk}}" onclick="toggleCheckbox(this,'norm')">
+		  {{ele.fields.topic}}</dt>
+			<dd>
+				{{ele.fields.desc}}
+			</dd>
+		</span>
+		{% endif %}
+      {% endfor %}
+	</ul>
+	<hr>
+	<ul id="TODOPEN" >
+		{% for ele in todolstpen %}
+			{% if ele.fields.marked == False %}
+		<span>
+      <dt>
+		  <input type="checkbox" topicid="{{ele.pk}}" onclick="toggleCheckbox(this,'pen')">
+		  {{ele.fields.topic}}({{ele.fields.RevisionDate}})</dt>
+			<dd>
+				{{ele.fields.desc}}
+			</dd>
+		</span>
+		{% endif %}
+      {% endfor %}
+	</ul>
+	<hr><hr>
+	<ul id = 'Checked'>
+		{% for ele in todolst %}
+		{% if ele.fields.marked == True %}
+		<span>
+      <dt>
+		  <input type="checkbox" topicid="{{ele.pk}}" onclick="toggleCheckbox(this,'norm')" checked>
+		  {{ele.fields.topic}}</dt>
+			<dd>
+				{{ele.fields.desc}}
+			</dd>
+		</span>
+		{% endif %}
+      {% endfor %}
+		{% for ele in todolstpen %}
+			{% if ele.fields.marked == True %}
+		<span>
+      <dt>
+		  <input type="checkbox" topicid="{{ele.pk}}" onclick="toggleCheckbox(this,'pen')" checked>
+		  {{ele.fields.topic}}({{ele.fields.RevisionDate}})
+	  </dt>
+			<dd>
+				{{ele.fields.desc}}
+			</dd>
+		</span>
+		{% endif %}
+      {% endfor %}
+	</ul>
+<script>
+	function toggleCheckbox(element,key){
+		var status = element.checked
+		if(status){
+			update = sendDataTodo(element.getAttribute('topicid'),1)
+			if(update){
+				var pendingele = document.getElementById('Checked')
+				pendingele.appendChild(element.parentElement.parentElement)
+			}
+			else{
+				element.checked=false
+			}
+		}
+		else{
+			update = sendDataTodo(element.getAttribute('topicid'),0)
+			if(update){
+				if(key=='norm'){
+					var pendingEle = document.getElementById('TODO')
+				}
+				else if(key=='pen'){
+					var pendingEle = document.getElementById('TODOPEN')
+				}
+				pendingEle.appendChild(element.parentElement.parentElement)
+			}
+		}
+	}
+
+	function sendDataTodo(topicid,key){
+		console.log(topicid+key)
+			 $.ajax({
+                type: "POST",
+                url: "./todo/",
+                dataType:"json",
+                async: false,
+                data:{
+                    "topicid":topicid,
+                    "key":key,
+                    "csrfmiddlewaretoken": "{{csrf_token}}",
+                },
+                success: function(data,status)
+                    {
+                          val = true
+                	},
+                error: function(data){
+                	alert(data.responseText)
+                	val = null
+                }
+            });
+           return val
+	}
+</script>
