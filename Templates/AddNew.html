@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<head>
+	<title>Keep</title>
+</head>
+<body>
+	<dl id='Items'>
+		{% for ele in keeplst %}
+		<span>
+      <dt>{{ele.fields.topic}}</dt>
+		<dd>{{ele.fields.desc}}
+			<input type="button" topicid="{{ele.pk}}" value="x" onclick="DeleteItem(this)">
+			</dd>
+		</span>
+      {% endfor %}
+	</dl>
+	<center>
+	<input type='button' value='Add(+)' onclick='AddNew(this,0)' id='AddNewButton'>
+		<div id='AddNewItem' style='display:none'>
+			<input type='text' placeholder='Topic' id='AddNewTopic'>
+			<br>
+			<input type='text' placeholder='Description' id='AddNewDesc'>
+			<br>
+			<input type='button' value='Cancel' onclick='AddNew(this,2)'> <input type='button' value='OK'onclick='AddNew(this,1)'>
+		</div>
+	</center>
+<script>
+	function AddNew(element,key){
+		if(key==0){																					//If AddNew(+) is pressed
+			element.style.display='none';
+			var AddNewItem = document.getElementById('AddNewItem');
+			AddNewItem.style.display='block'
+		}
+		else if(key==1){																			//if Ok Is Pressed
+			var topic = document.getElementById('AddNewTopic').value
+			var desc = document.getElementById('AddNewDesc').value
+			if(topic==='' & desc===''){
+				alert('Please enter some task')
+				return
+			}
+			id = sendDataAddNew(topic,desc,'add')
+			if(id){
+			var items = document.getElementById('Items')
+			var dt = document.createElement('DT')
+			var dd = document.createElement('DD')
+			var span = document.createElement('SPAN')
+			var delItem = document.createElement('INPUT')
+			delItem.type='button'
+			delItem.value='x'
+			delItem.setAttribute('topicid',id)
+			delItem.setAttribute("onclick","DeleteItem(this)")
+			dt.innerHTML = topic
+			dd.innerHTML = desc+' '
+			span.appendChild(dt)
+			span.appendChild(dd)
+			dd.appendChild(delItem)
+			items.appendChild(span)
+			document.getElementById('AddNewTopic').value=''
+			document.getElementById('AddNewDesc').value=''
+			var divelement = document.getElementById('AddNewItem')
+			divelement.style.display='none';
+			var addnewdiv = document.getElementById('AddNewButton');
+			addnewdiv.style.display='block'
+			}
+		}
+		else{																					// If Cancel is pressed
+			document.getElementById('AddNewTopic').value=''
+			document.getElementById('AddNewDesc').value=''
+			var divelement = document.getElementById('AddNewItem')
+			divelement.style.display='none';
+			var addnewdiv = document.getElementById('AddNewButton');
+			addnewdiv.style.display='block'
+		}
+		
+	}
+
+	function DeleteItem(element){
+		update = sendDataAddNew(element.getAttribute('topicid'),null,'del')
+		if(update){
+		element.parentElement.parentElement.remove()
+		}
+	}
+
+	 function sendDataAddNew(topic,desc,key){
+	 		console.log(topic+desc+key)
+			 $.ajax({
+                type: "POST",
+                url: "./addnew/",
+                dataType:"json",
+                async: false,
+                data:{
+                    "topic":topic,
+                    "desc":desc,
+                    "key":key,
+                    "csrfmiddlewaretoken": "{{csrf_token}}",
+                },
+                success: function(data,status)
+                    {
+                          val = data
+                	},
+                error: function(data){
+                	alert(data.responseText)
+                	val = null
+                }
+            });
+           return val
+	}
+</script>	
+</body>

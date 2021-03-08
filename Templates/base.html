@@ -1,0 +1,54 @@
+
+<head>
+  {% load static %}  
+	<meta charset='UTF-8' name='viewport' content="width=device-width,initial-scale=1.0">
+    <link rel='stylesheet' href="{% static 'css/bootstrap.min.css' %}" media='screen'>
+  <!-- Our project just needs Font Awesome Free's Solid + Brand files -->
+  <link href="{% static 'fontawesome_free/css/fontawesome.css' %}" rel="stylesheet" type="text/css">
+  <link href="{% static 'fontawesome_free/css/brands.css' %}" rel="stylesheet" type="text/css">
+  <link href="{% static 'fontawesome_free/css/solid.css' %}" rel="stylesheet" type="text/css">
+  <script type="text/javascript"  src="{% static 'js/jquery-3.5.1.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/bootstrap.js' %}"></script>
+  <style>
+	    .nav-item{
+          display:block;
+	      vertical-align: bottom;
+	      padding-right:15px;
+	      color: white;
+	    }
+	    #sidebar{
+	      position:fixed;
+	      z-index:1px;
+	      height:100em;
+	      display:none;
+	    }
+	     .mobileDiv{
+	      display:none;
+	    }
+		/* On screens that are less than 700px wide, make the sidebar into a topbar */
+		@media screen and (max-width: 720px) {
+          .nav-item{
+          display:block;
+	      vertical-align: bottom;
+	      padding-right:15px;
+	      color: white;
+	    }
+	    #AddNewDiv{
+	      display:none;
+	      padding-left:25px;
+	    }
+	    .mobileDiv{
+	      display:block;
+	    }
+		}
+
+	</style>
+  <script src="{% static 'js/waypoints/lib/jquery.waypoints.min.js' %}"></script>
+    <script src="{% static 'js/waypoints/lib/shortcuts/infinite.min.js' %}"></script>
+</head>
+<body class="bg-dark" style=" overflow:hidden;">
+
+  {% block content %}
+  {% endblock %}
+
+</body>
