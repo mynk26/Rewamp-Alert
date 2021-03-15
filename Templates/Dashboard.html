@@ -8,25 +8,30 @@
 </ul>
 <div class="row">
     <div class="col-12 col-md-4 bg-secondary nav-pills text-light border border-light" id="sidebar">
-       <h4 class="text-light">Home</h4>
+        <h4 class="text-light" onclick="HomeClick()">Home</h4>
         <li class="nav-item" style="margin-right:auto;">
-    <span class="nav-link active mobileDiv" id="TodoNav" onclick="changeDiv(this,'AddNewNav', 1)" >TODO</span>
-  </li>
-  <li class="nav-item" style="margin-right:auto;">
-    <span class="nav-link mobileDiv" id="AddNewNav" onclick="changeDiv(this,'TodoNav',2)" >Add New</span>
-  </li>
+            <span class="nav-link active mobileDiv" id="TodoNav" onclick="changeDiv(this, 1)" >TODO</span>
+        </li>
+        <li class="nav-item" style="margin-right:auto;">
+            <span class="nav-link mobileDiv" id="AddNewNav" onclick="changeDiv(this, 2)" >Add New</span>
+        </li>
+        <li class="nav-item" style="margin-right:auto;">
+            <span class="nav-link" id="AllTaskNav" onclick="changeDiv(this, 3, 'alltask')" >All Tasks</span>
+        </li>
         <a class="btn btn-secondary" href="/logout/">Logout</a>
-   </div>
-   <div class="col-12 col-md-6 bg-dark text-light border border-light" id="TodoDiv">
-       <center class="moblieDiv"><h4>TODO LIST</h4></center>
-      {% include "todo.html" %}
-   </div>
+    </div>
+    <div class="col-12 col-md-6 bg-dark text-light border border-light" id="TodoDiv">
+        <center class="moblieDiv"><h4>TODO LIST</h4></center>
+        {% include "todo.html" %}
+    </div>
 
    <div class="col-12 col-md-6 bg-dark text-light border border-light" id="AddNewDiv">
        <center class="moblieDiv"><h4>Add New Item</h4></center>
       {% include "AddNew.html" %}
    </div>
 </div>
+<iframe class="col-12  bg-dark text-light border border-light" id="iframe" style="display:none; height:80%">
+   </iframe>
 <script>
     function sidebar(ele){
         if(ele.innerHTML=='More'){
@@ -38,21 +43,36 @@
             ele.innerHTML='More'
         }
     }
-    function changeDiv(element, oppEle, page){
-        element.classList.add('active')
+    function HomeClick(){
+            window.location.reload()
+    }
+    function changeDiv(element,page,url=''){
         var toggleBtn = document.getElementById('toggleBtn')
         sidebar(toggleBtn)
-        var oppElement = document.getElementById(oppEle)
-        oppElement.classList.remove('active')
+        eles = document.getElementsByClassName('active')
+        for(i=0;i<eles.length;i++){
+            eles[i].classList.remove('active')
+        }
+        element.classList.add('active')
         if(page==1){
             document.getElementById('TodoDiv').style.display='block';
             document.getElementById('AddNewDiv').style.display='none';
+            document.getElementById('iframe').style.display='none';
         }
         else if(page==2){
             document.getElementById('AddNewDiv').style.display='block';
             document.getElementById('TodoDiv').style.display='none';
+            document.getElementById('iframe').style.display='none';
+        }
+        else if(page==3){
+            console.log('./'+url+'/')
+            document.getElementById('AddNewDiv').style.display='none';
+            document.getElementById('TodoDiv').style.display='none';
+            document.getElementById('iframe').style.display='block';
+            document.getElementById('iframe').src=url+'/'
         }
 
     }
+
 </script>
 {% endblock %}

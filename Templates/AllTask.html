@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% block content %}
+<center>
+    <table border="1">
+        <tr>
+            <h4>
+                <th>Topic</th>
+                <th>Total Revision</th>
+                <th>Started On</th>
+                <th>Next Revision</th>
+                <th>Delete</th>
+            </h4>
+
+        </tr>
+        {% for ele in alltask %}
+        <tr id='{{ele.pk}}row'>
+            <td onclick="sendReq({{ele.pk}},'load')">{{ ele.fields.topic }}</td>
+            <td>{{ ele.fields.TotalRevision }}</td>
+            <td>{{ ele.fields.date }}</td>
+            <td>{{ ele.fields.RevisionDate}}</td>
+            <td><input type="button" class="btn btn-danger" onclick="sendReq({{ele.pk}},'del')" value="Del"></td>
+        </tr>
+        {% endfor %}
+    </table>
+    </center>
+    <div id="details">
+
+    </div>
+
+<style>
+    td,th{
+        text-align:center;
+        width:20%;
+        color:white;
+    }
+
+</style>
+<script>
+    function sendReq(pk,key){
+        if(key == 'del'){
+                    check = window.confirm('Are you sure?');
+                    if(check != true){
+                        return null
+                    }
+                }
+        $.ajax({
+                type: "POST",
+                url: "../addnew/",
+                dataType:"json",
+                async: false,
+                data:{
+                    "topic":pk,
+                    "key":key,
+                    "csrfmiddlewaretoken": "{{csrf_token}}",
+                },
+                success: function(data,status)
+                    {
+                        if(key == 'del'){
+                          document.getElementById(pk+'row').remove()
+                          window.parent.document.getElementById(pk+'span').remove()
+                          }
+                        else if(key == 'load'){
+                            detailsDiv =document.getElementById('details')
+                            detailsDiv.innerHTML='<input type="button" value="X" onclick="removeDiv(this)" style="right:0px"><br><br>'
+                            detailsDiv.innerHTML += 'Topic: '+data[0].fields.topic+'<br>Description: '+data[0].fields.desc
+                            detailsDiv.style.display='block'
+                        }
+
+                	},
+                error: function(data){
+                	alert(data.responseText)
+                	val = null
+                }
+            });
+    }
+    function removeDiv(ele){
+        ele.parentElement.style.display='none'
+    }
+</script>
+{% endblock %}

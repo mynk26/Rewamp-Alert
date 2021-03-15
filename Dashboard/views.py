@@ -51,6 +51,14 @@ class AddnewView(APIView):
                 except Exception as e:
                     print(e.__str__())
                     return Response(e.__str__(),status=500)
+            elif data['key']=='load':
+                temp_obj = tasks.objects.filter(user=user,id = data['topic'])
+                try:
+                    data = json.loads(str(serializers.serialize("json",temp_obj)))
+                    return Response(data,status=200)
+                except Exception as e:
+                    print(e.__str__())
+                    return Response(e.__str__(),status=500)
         except Exception as e:
             print(e.__str__()+'\n\n')
             return Response(e.__str__(),status=500)
@@ -80,3 +88,13 @@ class TodoView(APIView):
         except Exception as e:
             print(e.__str__()+'\n\n')
             return Response(e.__str__(),status=500)
+
+class AlltaskView(APIView):
+    def get(self,request):
+        user = request.user
+        if not user.is_authenticated:
+            return HttpResponse("<script>window.location.href = '../';alert('User not Found!!!!!!');</script>", status=500)
+        alltask = tasks.objects.filter(user=user).order_by('-date')
+        alltask = json.loads(str(serializers.serialize("json",alltask)))
+        print(alltask)
+        return render(request,"AllTask.html",{"alltask":alltask})

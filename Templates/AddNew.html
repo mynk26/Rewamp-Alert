@@ -43,6 +43,7 @@
 			var dt = document.createElement('DT')
 			var dd = document.createElement('DD')
 			var span = document.createElement('SPAN')
+			span.setAttribute("id",id+'span')
 			var delItem = document.createElement('INPUT')
 			delItem.type='button'
 			delItem.value='x'
@@ -81,6 +82,12 @@
 	}
 
 	 function sendDataAddNew(topic,desc,key){
+	 		if(key == 'del'){
+                    check = window.confirm('Are you sure?');
+                    if(check != true){
+                        return null
+                    }
+                }
 	 		console.log(topic+desc+key)
 			 $.ajax({
                 type: "POST",
